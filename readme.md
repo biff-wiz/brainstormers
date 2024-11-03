@@ -21,6 +21,7 @@ https://github.com/user-attachments/assets/681a3a87-da52-482d-904f-3731c9679ca1
 
 
 ## Usage
+Be sure to have a valid API key from OpenAI to add in your `.env` file
 
 1. **Clone the repository**:
    ```bash
