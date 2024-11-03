@@ -8,10 +8,10 @@ from methods.starburtsting import sb
 from langchain_openai import ChatOpenAI
 
 # Make the layout wide for better display
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="🧠 Brainstormers", layout="wide")
 
 # Sidebar for API key input
-st.sidebar.title("Settings")
+st.sidebar.title("⚙️ Settings")
 api_key = st.sidebar.text_input("Enter your OpenAI API Key:", type="password")
 
 # Check if API key is provided
@@ -20,7 +20,7 @@ if api_key:
     llm = ChatOpenAI(model="gpt-4o-mini", api_key=api_key)
     
     # App title and description
-    st.title("🧠 Brainstorming App")
+    st.title("🧠 Brainstormers")
     st.write("Welcome! Choose a brainstorming mode to start generating ideas for your project.")
 
     # Define the brainstorming modes, their corresponding functions, and descriptions
@@ -79,7 +79,5 @@ if api_key:
             st.markdown(result)
 else:
     # Display a message asking for the API key
-    st.title("🧠 Brainstorming App")
-    st.write("Please enter your OpenAI API Key in the sidebar to start using the app.")
-
-
+    st.title("🧠 Brainstormers")
+    st.write("Unlock creative brainstorming methods like Big Mind Mapping, SCAMPER, and Role Storming to spark new ideas. Just add your OpenAI API Key in the sidebar to get started!")
