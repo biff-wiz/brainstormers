@@ -1,15 +1,9 @@
-import os
-from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import AIMessage
 from langchain_core.output_parsers import StrOutputParser
 
-#import the OpenAI API key from the .env file
-load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-# LLMs
-llm = ChatOpenAI(model="gpt-4o-mini", api_key=OPENAI_API_KEY)
+
 gen_ideas_prompt = ChatPromptTemplate.from_template("""You are a clever work assistant that helps people generate ideas for their project, reasearch, paper or any other creative work. You'll be having a query from the user and you need to generate 5 (five) diverse, detailed, developed, precise and significant ideas related to the context of the query. The ideas should not be redundant and repetitive, be creative and unique. The ideas must be formatted in the form of bullet points without titles and without bold text.
 Query:{query}
 List of 5 bullet points ideas:""")
@@ -59,7 +53,7 @@ class TreeNode:
         self.children.append(child_node)
 
 class InitialIdeaChain:
-    def __init__(self):
+    def __init__(self, llm):
         self.gen_ideas_prompt = gen_ideas_prompt
         self.llm = llm
         self.chain = self.gen_ideas_prompt | self.llm | parse_bullet_points

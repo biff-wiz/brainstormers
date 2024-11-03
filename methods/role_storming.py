@@ -1,5 +1,5 @@
 from langchain_core.prompts import ChatPromptTemplate
-from utils import parse_bullet_points, TreeNode, print_tree, llm, InitialIdeaChain
+from utils import parse_bullet_points, TreeNode, print_tree, InitialIdeaChain
 
 
 role_storming_prompt = ChatPromptTemplate.from_template("""
@@ -23,13 +23,14 @@ Topic to brainstorm: {idea}
 List of Role Storming ideas by persona bullet points:
 """)
 
-initial_idea_chain = InitialIdeaChain()
-role_storming_chain = role_storming_prompt | llm | parse_bullet_points
+
 
 
 # user_query = "I am searching for ideas to automate hard tasks in any company using AI agents powered by LLMs"
 
-def rs(user_query):
+def rs(user_query, llm):
+    initial_idea_chain = InitialIdeaChain(llm)
+    role_storming_chain = role_storming_prompt | llm | parse_bullet_points
     root_rs = TreeNode(user_query)
 
     initial_ideas = initial_idea_chain.invoke({"query": user_query})

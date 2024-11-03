@@ -1,6 +1,6 @@
 
 from langchain_core.prompts import ChatPromptTemplate
-from utils import parse_bullet_points, TreeNode, print_tree, llm, InitialIdeaChain
+from utils import parse_bullet_points, TreeNode, print_tree, InitialIdeaChain
 
 
 reverse_brainstorming_prompt = ChatPromptTemplate.from_template("""
@@ -9,12 +9,13 @@ You are a perceptive problem-identification assistant that helps people analyze 
 Idea to analyze: {idea}
 List of 5 potential problems:
 """)
-initial_idea_chain = InitialIdeaChain()
-reverse_brainstorming_chain = reverse_brainstorming_prompt | llm | parse_bullet_points
+
 
 
 # user_query = "I am searching for ideas to automate hard tasks in any company using AI agents powered by LLMs"
-def rb(user_query):
+def rb(user_query,llm):
+    initial_idea_chain = InitialIdeaChain(llm)
+    reverse_brainstorming_chain = reverse_brainstorming_prompt | llm | parse_bullet_points
     root_rb = TreeNode(user_query)
 
     initial_ideas = initial_idea_chain.invoke({"query": user_query})

@@ -1,5 +1,5 @@
 from langchain_core.prompts import ChatPromptTemplate
-from utils import parse_bullet_points, TreeNode, print_tree, llm, InitialIdeaChain
+from utils import parse_bullet_points, TreeNode, print_tree, InitialIdeaChain
 
 scamper_ideas_prompt = ChatPromptTemplate.from_template("""
 You are a clever idea generator assistant that helps people brainstorm and generate new ideas using the SCAMPER method. SCAMPER is an activity-based thinking process that assists in developing an idea through a structured approach. Here’s how each step in SCAMPER works:
@@ -18,10 +18,11 @@ Topic to brainstorm: {idea}
 List of 7 SCAMPER ideas bullet points:
 """)
 
-initial_idea_chain = InitialIdeaChain()
-scamper_ideas_chain = scamper_ideas_prompt | llm | parse_bullet_points
 
-def sc(user_query):
+
+def sc(user_query, llm):
+    initial_idea_chain = InitialIdeaChain(llm)
+    scamper_ideas_chain = scamper_ideas_prompt | llm | parse_bullet_points
 
     root_sc = TreeNode(user_query)
 

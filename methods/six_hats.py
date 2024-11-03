@@ -1,5 +1,5 @@
 from langchain_core.prompts import ChatPromptTemplate
-from utils import parse_bullet_points, TreeNode, print_tree, llm, InitialIdeaChain
+from utils import parse_bullet_points, TreeNode, print_tree, InitialIdeaChain
 
 six_hats_ideas_prompt = ChatPromptTemplate.from_template("""
 You are a perceptive brainstorming assistant that helps people analyze an idea using the Six Thinking Hats method, developed by Edward de Bono. This method involves examining a topic from six distinct perspectives, each represented by a colored hat. Here’s how each hat works:
@@ -17,11 +17,12 @@ Topic to analyze: {idea}
 List of Six Thinking Hats perspectives:
 """)
 
-initial_idea_chain = InitialIdeaChain()
 
-six_hats_ideas_chain = six_hats_ideas_prompt | llm | parse_bullet_points
 
-def sh(user_query):
+def sh(user_query,llm):
+    initial_idea_chain = InitialIdeaChain(llm)
+
+    six_hats_ideas_chain = six_hats_ideas_prompt | llm | parse_bullet_points
     root_sh = TreeNode(user_query)
 
     initial_ideas = initial_idea_chain.invoke({"query": user_query})

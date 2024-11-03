@@ -1,7 +1,7 @@
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from utils import parse_bullet_points, TreeNode, print_tree, llm, InitialIdeaChain
+from utils import parse_bullet_points, TreeNode, print_tree, InitialIdeaChain
 
 
 sb_questions_prompt = ChatPromptTemplate.from_template("""You are a clever question generator assistant that helps people in brainstorming and generating from one idea to 6 questions following the starbursting brainstorming principles: the 5 W's and 1 H (Who, What, Where, When, Why, How) to explore a topic comprehensively. The resulting questions should be diverse, detailed, developed, precise and significant. The questions must not be redundant and repetitive, be creative and unique. The question must be formatted in the form of bullet points without titles and without bold text.
@@ -14,13 +14,14 @@ Context:{idea}
 Answer:""")
 
 
-initial_idea_chain = InitialIdeaChain()
-sb_questions_chain = sb_questions_prompt | llm | parse_bullet_points
-sb_answer_chain = sb_answer_prompt | llm | StrOutputParser()
+
 
 
 # wrapping up the starbursting chains
-def sb(user_query):
+def sb(user_query,llm):
+    initial_idea_chain = InitialIdeaChain(llm)
+    sb_questions_chain = sb_questions_prompt | llm | parse_bullet_points
+    sb_answer_chain = sb_answer_prompt | llm | StrOutputParser()
     root_sb = TreeNode(user_query)
 
     initial_ideas = initial_idea_chain.invoke({"query": user_query})

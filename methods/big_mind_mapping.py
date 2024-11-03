@@ -1,21 +1,22 @@
 from langchain_core.prompts import ChatPromptTemplate
-from utils import parse_bullet_points, TreeNode, print_tree, llm, InitialIdeaChain
+from utils import parse_bullet_points, TreeNode, print_tree, InitialIdeaChain
 
 mm_expand_idea_prompt = ChatPromptTemplate.from_template("""You are a clever idea expansion assistant that helps people expand one idea into 5 other related ideas. The resulting ideas should be diverse, detailed, developed, precise and significant. The ideas should not be redundant and repetitive, be creative and unique. The ideas must be formatted in the form of bullet points without titles and without bold text.
 Idea to expand:{idea}
 List of 5 bullet points ideas:""")
 
 
-# chains
 
-initial_idea_chain = InitialIdeaChain()
-mm_expand_idea_chain = mm_expand_idea_prompt | llm | parse_bullet_points
+
+
 
 
 # Main loop
 # Initialize the root node with the user's query
 
-def bmm(user_query):
+def bmm(user_query,llm):
+    initial_idea_chain = InitialIdeaChain(llm)
+    mm_expand_idea_chain = mm_expand_idea_prompt | llm | parse_bullet_points
      
     root = TreeNode(user_query)
 
