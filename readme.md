@@ -10,18 +10,17 @@ This app provides various brainstorming techniques:
 - **[Six Thinking Hats](https://www.groupmap.com/portfolio/six-thinking-hats)**: Based on Edward de Bono’s method, examines ideas from six angles: Data, Emotions, Risks, Benefits, Creativity, and Process Management.
 - **[Starbursting](https://lucidspark.com/blog/how-to-use-starbursting-for-brainstorming)**: Generates questions using the 5 W's and 1 H (Who, What, Where, When, Why, How), offering in-depth topic exploration.
 
+## Web App
+You can find the deployed app and test it directly here: https://brainstormers-2x7cxamrj2ngjbadgzthi4.streamlit.app/
 ## Project Pipeline
 The app’s pipeline is streamlined: instead of using agents or Langraph, it runs specific chains based on the selected brainstorming method. Each method initiates a structured chain tailored to the user’s choice. The output is organized into a tree of ideas, with an initial layer of ideas followed by deeper expansions as per each method's principles. For example, the Starbursting method generates detailed questions for each initial idea, followed by answers.
 ![Screenshot from 2024-11-02 20-51-40](https://github.com/user-attachments/assets/a703a222-2e5d-41ea-a7f9-be9a94add57a)
 
 ## Video Demo
 
-
 https://github.com/user-attachments/assets/681a3a87-da52-482d-904f-3731c9679ca1
 
-
 ## Usage
-Be sure to have a valid API key from OpenAI to add in your `.env` file
 
 1. **Clone the repository**:
    ```bash
