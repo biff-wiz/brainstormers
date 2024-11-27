@@ -6,20 +6,65 @@ from methods.scamper import sc
 from methods.six_hats import sh
 from methods.starburtsting import sb
 from langchain_openai import ChatOpenAI
+from langchain_core.language_models import BaseChatModel
+from langchain_core.messages import BaseMessage, AIMessage
+from typing import Any, List, Optional
+from langchain_core.outputs import ChatGeneration, ChatResult
+
+class LocalLLM(BaseChatModel):
+    base_url: str
+    api_key: str = "not-needed"
+    
+    def _generate(
+        self, 
+        messages: List[BaseMessage], 
+        stop: Optional[List[str]] = None, 
+        run_manager: Optional[Any] = None, 
+        **kwargs: Any
+    ) -> ChatResult:
+        import openai
+        client = openai.Client(
+            base_url=self.base_url,
+            api_key=self.api_key
+        )
+        
+        def convert_role(role: str) -> str:
+            role_map = {"human": "user", "ai": "assistant"}
+            return role_map.get(role, role)
+        
+        formatted_messages = [{"role": convert_role(m.type), "content": m.content} for m in messages]
+        response = client.chat.completions.create(
+            model="local-model",
+            messages=formatted_messages,
+            temperature=0.7
+        )
+        
+        message = AIMessage(content=response.choices[0].message.content)
+        generation = ChatGeneration(message=message)
+        return ChatResult(generations=[generation])
+
+    @property
+    def _llm_type(self) -> str:
+        return "local"
 
 # Make the layout wide for better display
 st.set_page_config(page_title="🧠 Brainstormers", layout="wide")
 
 # Sidebar for API key input
 st.sidebar.title("⚙️ Settings")
-api_key = st.sidebar.text_input("Enter your OpenAI API Key:", type="password")
+api_type = st.sidebar.selectbox("Select API Type:", ["OpenAI", "Local API"])
 
-# Check if API key is provided
-if api_key:
-    # Initialize the OpenAI model with the API key
-    llm = ChatOpenAI(model="gpt-4o-mini", api_key=api_key)
-    
-    # App title and description
+if api_type == "OpenAI":
+    api_key = st.sidebar.text_input("Enter your OpenAI API Key:", type="password")
+    if api_key:
+        llm = ChatOpenAI(model="gpt-4o-mini", api_key=api_key)
+else:
+    base_url = st.sidebar.text_input("Enter Local API Base URL:", value="http://localhost:1234/v1")
+    if base_url:
+        llm = LocalLLM(base_url=base_url)
+
+# Check if API settings are provided
+if (api_type == "OpenAI" and api_key) or (api_type == "Local API" and base_url):
     st.title("🧠 Brainstormers")
     st.write("Welcome! Choose a brainstorming mode to start generating ideas for your project.")
 
@@ -80,4 +125,4 @@ if api_key:
 else:
     # Display a message asking for the API key
     st.title("🧠 Brainstormers")
-    st.write("Unlock creative brainstorming methods like Big Mind Mapping, SCAMPER, and Role Storming to spark new ideas. Just add your OpenAI API Key in the sidebar to get started!")
+    st.write("Unlock creative brainstorming methods like Big Mind Mapping, SCAMPER, and Role Storming to spark new ideas. Please configure your API settings in the sidebar to get started!")
